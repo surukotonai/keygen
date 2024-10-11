@@ -5,29 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Key Generator</title>
     <script>
-        window.onload = function() {
+        const PASTEBIN_API_KEY = 'YOUR_PASTEBIN_API_KEY'; // ここにあなたのPastebin APIキーを記入してください
+        const PASTEBIN_USER_KEY = 'YOUR_PASTEBIN_USER_KEY'; // Optional: Pastebinのユーザーキー（ログインして使う場合）
 
-            let key = localStorage.getItem('userKey');
+        // キーを生成する関数
+        function generateKey() {
+            return `skidexec-${randomSegment()}-${randomSegment()}`;
+        }
 
-
-            if (!key) {
-                key = generateKey();
-                localStorage.setItem('userKey', key);
-            }
-
-
-            document.body.textContent = `you key: ${key}`;
-        };
-
-
+        // ランダムな3桁の文字列を生成する関数
         function randomSegment() {
             return Math.random().toString(36).substring(2, 5).toUpperCase();
         }
 
+        // Pastebinに新しいキーを保存する関数
+        function saveKeyToPastebin(key) {
+            const pasteData = {
+                api_dev_key: PASTEBIN_API_KEY,
+                api_option: 'paste',
+                api_paste_code: `you key: ${key}`,
+                api_paste_private: 1, // 0=public, 1=unlisted, 2=private
+                api_paste_name: 'KeyGen Output',
+                api_paste_expire_date: 'N', // Never expire
+                api_user_key: PASTEBIN_USER_KEY // Optional
+            };
 
-        function generateKey() {
-            return `skidexec-${randomSegment()}-${randomSegment()}`;
+            const formData = new URLSearchParams(pasteData).toString();
+
+            fetch('https://pastebin.com/api/api_post.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Pastebin URL:', result);
+                alert(`New key saved: ${key}\nCheck the paste at: ${result}`);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
+
+        window.onload = function() {
+            // 新しいキーを生成
+            const key = generateKey();
+
+            // Pastebinにキーを保存
+            saveKeyToPastebin(key);
+        };
     </script>
 </head>
 <body>
