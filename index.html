@@ -6,17 +6,28 @@
     <title>Key Generator</title>
     <script>
         window.onload = function() {
-            // ランダムな3桁の文字列を生成する関数
-            function randomSegment() {
-                return Math.random().toString(36).substring(2, 5).toUpperCase(); // 英数字3文字
+
+            let key = localStorage.getItem('userKey');
+
+
+            if (!key) {
+                key = generateKey();
+                localStorage.setItem('userKey', key);
             }
 
-            // 「skidexec-xxx-xxx」形式のキーを生成
-            const key = `skidexec-${randomSegment()}-${randomSegment()}`;
 
-            // ページの内容を「you key: skidexec-xxx-xxx」に置き換える
             document.body.textContent = `you key: ${key}`;
         };
+
+
+        function randomSegment() {
+            return Math.random().toString(36).substring(2, 5).toUpperCase();
+        }
+
+
+        function generateKey() {
+            return `skidexec-${randomSegment()}-${randomSegment()}`;
+        }
     </script>
 </head>
 <body>
