@@ -3,26 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keygen</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #key {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Key Generator</h1>
-    <button onclick="generateKey()">Generate Key</button>
-    <p id="key"></p>
-
+    <title>Key Generator</title>
     <script>
-        function generateKey() {
+        window.onload = function() {
             // ランダムな3桁の文字列を生成する関数
             function randomSegment() {
                 return Math.random().toString(36).substring(2, 5).toUpperCase(); // 英数字3文字
@@ -30,8 +13,12 @@
 
             // 「skidexec-xxx-xxx」形式のキーを生成
             const key = `skidexec-${randomSegment()}-${randomSegment()}`;
-            document.getElementById('key').innerText = key;
-        }
+
+            // ページの内容を「you key: skidexec-xxx-xxx」に置き換える
+            document.body.textContent = `you key: ${key}`;
+        };
     </script>
+</head>
+<body>
 </body>
 </html>
