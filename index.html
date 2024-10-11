@@ -5,56 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Key Generator</title>
     <script>
-        const PASTEBIN_API_KEY = 'TlCH0vD_sHM0a7UiNESmbCdF_MZ-KKIZ';
+        window.onload = async function() {
+            const key = generateKey();
+            await saveKeyToPastebin(key);
+        };
 
-
-        // キーを生成する関数
         function generateKey() {
             return `skidexec-${randomSegment()}-${randomSegment()}`;
         }
 
-        // ランダムな3桁の文字列を生成する関数
         function randomSegment() {
             return Math.random().toString(36).substring(2, 5).toUpperCase();
         }
 
-        // Pastebinに新しいキーを保存する関数
-        function saveKeyToPastebin(key) {
-            const pasteData = {
-                api_dev_key: PASTEBIN_API_KEY,
-                api_option: 'paste',
-                api_paste_code: `you key: ${key}`,
-                api_paste_private: 1, // 0=public, 1=unlisted, 2=private
-                api_paste_name: 'KeyGen Output',
-                api_paste_expire_date: 'N', // Never expire
-            };
-
-            const formData = new URLSearchParams(pasteData).toString();
-
-            fetch('https://pastebin.com/api/api_post.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: formData
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Pastebin URL:', result);
-                alert(`New key saved: ${key}\nCheck the paste at: ${result}`);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        async function saveKeyToPastebin(key) {
+            const response = await fetch('/.netlify/functions/saveKey?key=' + encodeURIComponent(key));
+            const result = await response.json();
+            alert(`New key saved: ${key}\nCheck the paste at: ${result.result}`);
         }
-
-        window.onload = function() {
-            // 新しいキーを生成
-            const key = generateKey();
-
-            // Pastebinにキーを保存
-            saveKeyToPastebin(key);
-        };
     </script>
 </head>
 <body>
